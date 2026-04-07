@@ -6,7 +6,8 @@ This directory contains additional documentation for the Terraform modules in th
 
 | Document | Description |
 |----------|-------------|
-| *(none yet)* | Documentation will be added here as modules are developed. |
+| `module-naming.md` | Naming convention for modules and examples |
+| `repository-architecture.md` | Repository layout, module lifecycle, and discoverability rules |
 
 ## Auto-generated Docs
 

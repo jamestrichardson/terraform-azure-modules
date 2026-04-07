@@ -19,7 +19,14 @@ examples/
 
 | Example | Description |
 |---------|-------------|
-| *(none yet)* | Examples will be listed here as they are added. |
+| `ai-foundry` | AI Foundry hub with supporting resources |
+| `azure-openai` | Azure OpenAI account with deployment |
+| `container-app` | End-to-end Container Apps stack (workspace + environment + app) |
+| `container-apps-environment` | Container Apps Environment with required Log Analytics |
+| `container-registry` | Container Registry with diagnostics |
+| `log-analytics` | Standalone Log Analytics workspace |
+| `postgresql-flexible` | PostgreSQL Flexible Server with database and diagnostics |
+| `static-web-app` | Static Web App deployment |
 
 ## Running an Example
 
@@ -36,4 +43,8 @@ examples/
 3. Review the plan:
    ```bash
    terraform plan
+   ```
+4. Apply if desired:
+   ```bash
+   terraform apply
    ```
