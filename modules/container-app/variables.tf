@@ -14,6 +14,11 @@ variable "revision_mode" {
   description = "Single | Multiple"
   type        = string
   default     = "Single"
+
+  validation {
+    condition     = contains(["Single", "Multiple"], var.revision_mode)
+    error_message = "revision_mode must be Single or Multiple."
+  }
 }
 
 variable "min_replicas" {
@@ -62,6 +67,12 @@ variable "containers" {
   }))
 }
 
+variable "workload_profile_name" {
+  description = "Optional workload profile name to target in the Container Apps environment."
+  type        = string
+  default     = null
+}
+
 variable "volumes" {
   type = list(object({
     name         = string
@@ -91,8 +102,10 @@ variable "ingress" {
 variable "secrets" {
   description = "Secrets injected into the container app"
   type = list(object({
-    name  = string
-    value = string
+    name                = string
+    value               = optional(string)
+    identity            = optional(string)
+    key_vault_secret_id = optional(string)
   }))
   default   = []
   sensitive = true
@@ -122,6 +135,10 @@ variable "custom_scale_rules" {
     name             = string
     custom_rule_type = string
     metadata         = map(string)
+    authentication = optional(list(object({
+      secret_name       = string
+      trigger_parameter = string
+    })), [])
   }))
   default = []
 }
@@ -130,6 +147,14 @@ variable "identity_type" {
   description = "None | SystemAssigned | UserAssigned | SystemAssigned, UserAssigned"
   type        = string
   default     = "SystemAssigned"
+
+  validation {
+    condition = contains(
+      ["None", "SystemAssigned", "UserAssigned", "SystemAssigned, UserAssigned"],
+      var.identity_type
+    )
+    error_message = "identity_type must be None, SystemAssigned, UserAssigned, or SystemAssigned, UserAssigned."
+  }
 }
 
 variable "identity_ids" {

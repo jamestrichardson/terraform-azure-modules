@@ -7,6 +7,14 @@ output "name" {
   value = azurerm_log_analytics_workspace.this.name
 }
 
+output "location" {
+  value = azurerm_log_analytics_workspace.this.location
+}
+
+output "resource_group_name" {
+  value = azurerm_log_analytics_workspace.this.resource_group_name
+}
+
 output "workspace_id" {
   description = "The workspace (customer) ID — used by diagnostics settings"
   value       = azurerm_log_analytics_workspace.this.workspace_id

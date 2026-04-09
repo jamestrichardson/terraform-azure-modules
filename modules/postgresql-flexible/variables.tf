@@ -47,6 +47,11 @@ variable "storage_tier" {
 variable "backup_retention_days" {
   type    = number
   default = 7
+
+  validation {
+    condition     = var.backup_retention_days >= 7 && var.backup_retention_days <= 35
+    error_message = "backup_retention_days must be between 7 and 35."
+  }
 }
 
 variable "geo_redundant_backup_enabled" {
@@ -56,7 +61,7 @@ variable "geo_redundant_backup_enabled" {
 
 variable "zone" {
   type    = string
-  default = "1"
+  default = null
 }
 
 variable "delegated_subnet_id" {
@@ -69,6 +74,17 @@ variable "private_dns_zone_id" {
   description = "Required when using delegated_subnet_id"
   type        = string
   default     = null
+
+  validation {
+    condition     = var.delegated_subnet_id == null || var.private_dns_zone_id != null
+    error_message = "private_dns_zone_id must be set when delegated_subnet_id is provided."
+  }
+}
+
+variable "public_network_access_enabled" {
+  description = "Enable public network access when not using delegated subnet integration."
+  type        = bool
+  default     = true
 }
 
 variable "high_availability" {
@@ -110,9 +126,7 @@ variable "databases" {
 variable "server_configurations" {
   description = "Map of server parameter name → value"
   type        = map(string)
-  default = {
-    "azure.extensions" = "VECTOR,PGCRYPTO,UUID-OSSP"
-  }
+  default     = {}
 }
 
 variable "firewall_rules" {

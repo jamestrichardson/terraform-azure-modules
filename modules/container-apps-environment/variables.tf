@@ -21,10 +21,21 @@ variable "infrastructure_subnet_id" {
   default     = null
 }
 
+variable "infrastructure_resource_group_name" {
+  description = "Optional infrastructure resource group name used by Azure for the managed environment."
+  type        = string
+  default     = null
+}
+
 variable "internal_load_balancer_enabled" {
   description = "True = internal-only environment (requires subnet)"
   type        = bool
   default     = false
+
+  validation {
+    condition     = !var.internal_load_balancer_enabled || var.infrastructure_subnet_id != null
+    error_message = "internal_load_balancer_enabled requires infrastructure_subnet_id to be set."
+  }
 }
 
 variable "zone_redundancy_enabled" {
@@ -40,7 +51,19 @@ variable "storage_mounts" {
     access_key   = string
     access_mode  = string # ReadWrite | ReadOnly
   }))
-  default = {}
+  default   = {}
+  sensitive = true
+}
+
+variable "workload_profiles" {
+  description = "Optional workload profiles for dedicated or consumption-based Container Apps environments."
+  type = list(object({
+    name                  = string
+    workload_profile_type = string
+    minimum_count         = optional(number)
+    maximum_count         = optional(number)
+  }))
+  default = []
 }
 
 variable "tags" {

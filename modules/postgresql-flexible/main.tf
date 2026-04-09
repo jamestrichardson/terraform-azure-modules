@@ -1,16 +1,3 @@
-terraform {
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = ">= 3.90.0"
-    }
-    random = {
-      source  = "hashicorp/random"
-      version = ">= 3.5.0"
-    }
-  }
-}
-
 resource "random_password" "admin" {
   count   = var.administrator_password == null ? 1 : 0
   length  = 32
@@ -34,9 +21,10 @@ resource "azurerm_postgresql_flexible_server" "this" {
   storage_mb   = var.storage_mb
   storage_tier = var.storage_tier
 
-  backup_retention_days        = var.backup_retention_days
-  geo_redundant_backup_enabled = var.geo_redundant_backup_enabled
-  zone                         = var.zone
+  backup_retention_days         = var.backup_retention_days
+  geo_redundant_backup_enabled  = var.geo_redundant_backup_enabled
+  public_network_access_enabled = var.delegated_subnet_id != null ? false : var.public_network_access_enabled
+  zone                          = var.zone
 
   delegated_subnet_id = var.delegated_subnet_id
   private_dns_zone_id = var.private_dns_zone_id
@@ -108,8 +96,7 @@ resource "azurerm_monitor_diagnostic_setting" "this" {
   log_analytics_workspace_id = var.log_analytics_workspace_id
 
   enabled_log { category = "PostgreSQLLogs" }
-  metric {
+  enabled_metric {
     category = "AllMetrics"
-    enabled  = true
   }
 }

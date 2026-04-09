@@ -1,33 +1,35 @@
-terraform {
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = ">= 3.90.0"
-    }
-  }
-}
-
 resource "azurerm_container_app_environment" "this" {
   name                = var.name
   location            = var.location
   resource_group_name = var.resource_group_name
 
-  log_analytics_workspace_id     = var.log_analytics_workspace_id
-  infrastructure_subnet_id       = var.infrastructure_subnet_id
-  internal_load_balancer_enabled = var.internal_load_balancer_enabled
-  zone_redundancy_enabled        = var.zone_redundancy_enabled
+  log_analytics_workspace_id         = var.log_analytics_workspace_id
+  infrastructure_subnet_id           = var.infrastructure_subnet_id
+  infrastructure_resource_group_name = var.infrastructure_resource_group_name
+  internal_load_balancer_enabled     = var.internal_load_balancer_enabled
+  zone_redundancy_enabled            = var.zone_redundancy_enabled
+
+  dynamic "workload_profile" {
+    for_each = var.workload_profiles
+    content {
+      name                  = workload_profile.value.name
+      workload_profile_type = workload_profile.value.workload_profile_type
+      minimum_count         = lookup(workload_profile.value, "minimum_count", null)
+      maximum_count         = lookup(workload_profile.value, "maximum_count", null)
+    }
+  }
 
   tags = var.tags
 }
 
 # Custom domain certificate storage
 resource "azurerm_container_app_environment_storage" "shared" {
-  for_each = var.storage_mounts
+  for_each = toset(nonsensitive(keys(var.storage_mounts)))
 
-  name                         = each.key
+  name                         = each.value
   container_app_environment_id = azurerm_container_app_environment.this.id
-  account_name                 = each.value.account_name
-  share_name                   = each.value.share_name
-  access_key                   = each.value.access_key
-  access_mode                  = each.value.access_mode
+  account_name                 = var.storage_mounts[each.value].account_name
+  share_name                   = var.storage_mounts[each.value].share_name
+  access_key                   = var.storage_mounts[each.value].access_key
+  access_mode                  = var.storage_mounts[each.value].access_mode
 }

@@ -15,6 +15,7 @@ Each module should contain:
 - `main.tf`
 - `variables.tf`
 - `outputs.tf`
+- `versions.tf`
 - `README.md`
 
 Module README requirements:

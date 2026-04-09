@@ -38,9 +38,40 @@ See [`modules/`](./modules/) for all available modules and module-level README d
 | `container-app` | Azure Container Apps |
 | `container-apps-environment` | Azure Container Apps Environment |
 | `container-registry` | Azure Container Registry |
+| `diagnostic-settings` | Azure Monitor Diagnostic Settings |
+| `key-vault` | Azure Key Vault |
 | `log-analytics` | Azure Log Analytics Workspace |
+| `network-security-group` | Azure Network Security Group |
+| `policy-assignment` | Azure Policy Assignment |
 | `postgresql-flexible` | Azure Database for PostgreSQL Flexible Server |
+| `resource-group` | Azure Resource Group |
+| `role-assignment` | Azure RBAC Role Assignment |
+| `route-table` | Azure Route Table |
+| `storage-account` | Azure Storage Account |
 | `static-web-app` | Azure Static Web Apps |
+| `subnet` | Azure Subnet |
+| `subnet-nsg-association` | Azure Subnet to NSG Association |
+| `subnet-route-table-association` | Azure Subnet to Route Table Association |
+| `virtual-network` | Azure Virtual Network |
+
+## Intended Usage
+
+These modules are backend-oriented building blocks for Azure services and platform primitives. They aim to expose stable, typed, provider-facing interfaces that mid-tier modules can wrap with environment conventions, opinionated defaults, composition patterns, and cross-service policy.
+
+## Recommended Mid-Tier Wrappers
+
+| Mid-Tier Wrapper in `teknofile-modules-01` | Backend Modules to Compose |
+|--------------------------------------------|----------------------------|
+| `azure-platform-resource-group` | `resource-group` |
+| `azure-platform-log-analytics` | `log-analytics` |
+| `azure-platform-key-vault` | `key-vault`, `role-assignment`, `diagnostic-settings`, `private-endpoint` later if added |
+| `azure-platform-storage-account` | `storage-account`, `role-assignment`, `diagnostic-settings` |
+| `azure-platform-container-registry` | `container-registry`, `role-assignment`, `diagnostic-settings` |
+| `azure-platform-container-apps-environment` | `virtual-network`, `subnet`, `network-security-group`, `subnet-nsg-association`, `container-apps-environment`, `log-analytics`, `diagnostic-settings` |
+| `azure-platform-container-app` | `container-app`, `role-assignment`, `key-vault`, `container-registry` |
+| `azure-platform-postgresql-flexible` | `subnet`, `network-security-group`, `subnet-nsg-association`, `postgresql-flexible`, `diagnostic-settings` |
+| `azure-platform-network-foundation` | `virtual-network`, `subnet`, `network-security-group`, `subnet-nsg-association`, `route-table`, `subnet-route-table-association` |
+| `azure-platform-subscription-baseline` | `policy-assignment`, `role-assignment`, `diagnostic-settings` |
 
 ## Examples
 

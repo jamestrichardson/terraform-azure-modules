@@ -28,6 +28,29 @@ variable "admin_enabled" {
   default     = false
 }
 
+variable "anonymous_pull_enabled" {
+  description = "Allow unauthenticated image pull requests."
+  type        = bool
+  default     = false
+}
+
+variable "data_endpoint_enabled" {
+  description = "Enable dedicated data endpoints for data plane traffic."
+  type        = bool
+  default     = false
+}
+
+variable "network_rule_bypass_option" {
+  description = "AzureServices or None."
+  type        = string
+  default     = "AzureServices"
+
+  validation {
+    condition     = contains(["AzureServices", "None"], var.network_rule_bypass_option)
+    error_message = "network_rule_bypass_option must be AzureServices or None."
+  }
+}
+
 variable "public_network_access_enabled" {
   type    = bool
   default = true
@@ -52,6 +75,38 @@ variable "retention_policy_days" {
   description = "Untagged manifest retention days (Premium SKU only). null = disabled."
   type        = number
   default     = null
+}
+
+variable "network_rule_set" {
+  description = "Optional IP-based network rules for Premium registries."
+  type = object({
+    default_action = string
+    ip_rules = optional(list(object({
+      action   = optional(string, "Allow")
+      ip_range = string
+    })), [])
+  })
+  default = null
+}
+
+variable "identity_type" {
+  description = "None | SystemAssigned | UserAssigned | SystemAssigned, UserAssigned"
+  type        = string
+  default     = "None"
+
+  validation {
+    condition = contains(
+      ["None", "SystemAssigned", "UserAssigned", "SystemAssigned, UserAssigned"],
+      var.identity_type
+    )
+    error_message = "identity_type must be None, SystemAssigned, UserAssigned, or SystemAssigned, UserAssigned."
+  }
+}
+
+variable "identity_ids" {
+  description = "User-assigned identity IDs to attach when using a user-assigned identity type."
+  type        = list(string)
+  default     = []
 }
 
 variable "log_analytics_workspace_id" {
