@@ -6,6 +6,14 @@ output "name" {
   value = azurerm_postgresql_flexible_server.this.name
 }
 
+output "location" {
+  value = azurerm_postgresql_flexible_server.this.location
+}
+
+output "resource_group_name" {
+  value = azurerm_postgresql_flexible_server.this.resource_group_name
+}
+
 output "fqdn" {
   value = azurerm_postgresql_flexible_server.this.fqdn
 }

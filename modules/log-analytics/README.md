@@ -1,6 +1,6 @@
 # Log Analytics Module
 
-Creates an Azure Log Analytics workspace for diagnostics and observability.
+Creates an Azure Log Analytics workspace for diagnostics and observability, with optional authentication and capacity controls.
 
 ## Azure Service Mapping
 
@@ -21,6 +21,7 @@ module "log_analytics" {
   resource_group_name = "rg-demo"
 
   retention_in_days = 30
+  local_authentication_disabled = true
 
   tags = {
     environment = "dev"
@@ -35,6 +36,7 @@ module "log_analytics" {
 ## Notes
 
 - Use this module as a shared dependency for module diagnostics settings.
+- Shared key auth can be disabled with `local_authentication_disabled` when wrappers prefer Azure RBAC and managed identity access patterns.
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- terraform-docs will populate inputs/outputs here -->

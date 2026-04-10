@@ -1,12 +1,3 @@
-terraform {
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = ">= 3.90.0"
-    }
-  }
-}
-
 resource "azurerm_container_registry" "this" {
   name                = var.name
   location            = var.location
@@ -14,8 +5,19 @@ resource "azurerm_container_registry" "this" {
   sku                 = var.sku
 
   admin_enabled                 = var.admin_enabled
+  anonymous_pull_enabled        = var.anonymous_pull_enabled
+  data_endpoint_enabled         = var.data_endpoint_enabled
+  network_rule_bypass_option    = var.network_rule_bypass_option
   public_network_access_enabled = var.public_network_access_enabled
   zone_redundancy_enabled       = var.zone_redundancy_enabled
+
+  dynamic "identity" {
+    for_each = var.identity_type == "None" ? [] : [1]
+    content {
+      type         = var.identity_type
+      identity_ids = contains(["UserAssigned", "SystemAssigned, UserAssigned"], var.identity_type) ? var.identity_ids : null
+    }
+  }
 
   dynamic "georeplications" {
     for_each = var.georeplications
@@ -25,11 +27,21 @@ resource "azurerm_container_registry" "this" {
     }
   }
 
-  dynamic "retention_policy" {
-    for_each = var.retention_policy_days != null ? [1] : []
+  retention_policy_in_days = var.retention_policy_days
+
+  dynamic "network_rule_set" {
+    for_each = var.network_rule_set != null ? [var.network_rule_set] : []
     content {
-      days    = var.retention_policy_days
-      enabled = true
+      default_action = network_rule_set.value.default_action
+
+      dynamic "ip_rule" {
+        for_each = lookup(network_rule_set.value, "ip_rules", [])
+        content {
+          action   = lookup(ip_rule.value, "action", "Allow")
+          ip_range = ip_rule.value.ip_range
+        }
+      }
+
     }
   }
 
@@ -50,8 +62,7 @@ resource "azurerm_monitor_diagnostic_setting" "this" {
   enabled_log {
     category = "ContainerRegistryLoginEvents"
   }
-  metric {
+  enabled_metric {
     category = "AllMetrics"
-    enabled  = true
   }
 }

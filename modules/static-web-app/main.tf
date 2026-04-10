@@ -1,12 +1,3 @@
-terraform {
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = ">= 4.0.0"
-    }
-  }
-}
-
 resource "azurerm_static_web_app" "this" {
   name                = var.name
   resource_group_name = var.resource_group_name

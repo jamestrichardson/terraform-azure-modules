@@ -1,6 +1,6 @@
 # Container Registry Module
 
-Creates an Azure Container Registry with optional diagnostics, retention policy, and geo-replication.
+Creates an Azure Container Registry with optional diagnostics, retention policy, geo-replication, identity, and network rules.
 
 ## Azure Service Mapping
 
@@ -21,6 +21,7 @@ module "container_registry" {
   location            = "eastus"
   resource_group_name = "rg-demo"
   sku                 = "Standard"
+  identity_type       = "SystemAssigned"
 
   tags = {
     environment = "dev"
@@ -36,6 +37,7 @@ module "container_registry" {
 
 - ACR names must be globally unique and alphanumeric only.
 - Premium SKU is required for geo-replication and retention policy features.
+- Use `network_rule_set` and `identity_type` when higher-level wrappers need private or managed-identity-aware registry patterns.
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- terraform-docs will populate inputs/outputs here -->

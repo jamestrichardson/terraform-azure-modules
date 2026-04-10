@@ -27,6 +27,7 @@ module "postgresql_flexible" {
   resource_group_name = "rg-demo"
 
   sku_name = "B_Standard_B1ms"
+  public_network_access_enabled = false
 
   databases = {
     app = {}
@@ -53,6 +54,7 @@ module "postgresql_flexible" {
 
 - If `administrator_password` is null, a random password is generated.
 - Use delegated subnet and private DNS zone for private networking.
+- `server_configurations` now defaults to an empty map so wrapper modules can choose extension and tuning policy explicitly.
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- terraform-docs will populate inputs/outputs here -->

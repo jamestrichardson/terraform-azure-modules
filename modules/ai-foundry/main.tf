@@ -1,12 +1,3 @@
-terraform {
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = ">= 4.0.0"
-    }
-  }
-}
-
 # Storage account required by the Foundry Hub
 resource "azurerm_storage_account" "foundry" {
   name                     = var.storage_account_name
@@ -69,8 +60,7 @@ resource "azurerm_monitor_diagnostic_setting" "this" {
   log_analytics_workspace_id = var.log_analytics_workspace_id
 
   enabled_log { category = "AmlComputeJobEvent" }
-  metric {
+  enabled_metric {
     category = "AllMetrics"
-    enabled  = true
   }
 }

@@ -6,6 +6,10 @@ output "name" {
   value = azurerm_container_app.this.name
 }
 
+output "resource_group_name" {
+  value = azurerm_container_app.this.resource_group_name
+}
+
 output "fqdn" {
   description = "The fully qualified domain name of the ingress (null if no ingress)"
   value       = try(azurerm_container_app.this.ingress[0].fqdn, null)

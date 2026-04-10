@@ -1,17 +1,9 @@
-terraform {
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = ">= 3.90.0"
-    }
-  }
-}
-
 resource "azurerm_container_app" "this" {
   name                         = var.name
   container_app_environment_id = var.container_app_environment_id
   resource_group_name          = var.resource_group_name
   revision_mode                = var.revision_mode
+  workload_profile_name        = var.workload_profile_name
 
   template {
     min_replicas = var.min_replicas
@@ -92,6 +84,14 @@ resource "azurerm_container_app" "this" {
         name             = custom_scale_rule.value.name
         custom_rule_type = custom_scale_rule.value.custom_rule_type
         metadata         = custom_scale_rule.value.metadata
+
+        dynamic "authentication" {
+          for_each = lookup(custom_scale_rule.value, "authentication", [])
+          content {
+            secret_name       = authentication.value.secret_name
+            trigger_parameter = authentication.value.trigger_parameter
+          }
+        }
       }
     }
   }
@@ -119,8 +119,10 @@ resource "azurerm_container_app" "this" {
   dynamic "secret" {
     for_each = var.secrets
     content {
-      name  = secret.value.name
-      value = secret.value.value
+      name                = secret.value.name
+      value               = lookup(secret.value, "value", null)
+      identity            = lookup(secret.value, "identity", null)
+      key_vault_secret_id = lookup(secret.value, "key_vault_secret_id", null)
     }
   }
 

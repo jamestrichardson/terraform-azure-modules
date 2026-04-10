@@ -1,12 +1,3 @@
-terraform {
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = ">= 3.90.0"
-    }
-  }
-}
-
 resource "azurerm_cognitive_account" "this" {
   name                = var.name
   location            = var.location
@@ -55,8 +46,8 @@ resource "azurerm_cognitive_deployment" "this" {
     version = each.value.model_version
   }
 
-  scale {
-    type     = lookup(each.value, "scale_type", "Standard")
+  sku {
+    name     = lookup(each.value, "scale_type", "Standard")
     capacity = lookup(each.value, "capacity", 1)
   }
 }
@@ -71,8 +62,7 @@ resource "azurerm_monitor_diagnostic_setting" "this" {
 
   enabled_log { category = "Audit" }
   enabled_log { category = "RequestResponse" }
-  metric {
+  enabled_metric {
     category = "AllMetrics"
-    enabled  = true
   }
 }
