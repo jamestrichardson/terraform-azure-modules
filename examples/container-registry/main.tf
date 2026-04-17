@@ -43,6 +43,7 @@ module "container_registry" {
   resource_group_name        = azurerm_resource_group.this.name
   sku                        = var.sku
   admin_enabled              = false
+  enable_diagnostic_settings = true
   log_analytics_workspace_id = module.log_analytics.id
 
   tags = var.tags
