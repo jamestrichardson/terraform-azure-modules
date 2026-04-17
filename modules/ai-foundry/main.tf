@@ -53,7 +53,7 @@ resource "azurerm_key_vault_access_policy" "foundry_hub" {
 
 # Diagnostics
 resource "azurerm_monitor_diagnostic_setting" "this" {
-  count = var.log_analytics_workspace_id != null ? 1 : 0
+  count = var.enable_diagnostic_settings ? 1 : 0
 
   name                       = "${var.name}-diag"
   target_resource_id         = azurerm_ai_foundry.this.id
