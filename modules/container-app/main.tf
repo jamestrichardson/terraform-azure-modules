@@ -105,7 +105,12 @@ resource "azurerm_container_app" "this" {
       allow_insecure_connections = lookup(ingress.value, "allow_insecure_connections", false)
 
       dynamic "traffic_weight" {
-        for_each = lookup(ingress.value, "traffic_weights", [{ latest_revision = true, percentage = 100 }])
+        for_each = length(coalesce(try(ingress.value.traffic_weights, null), [])) > 0 ? ingress.value.traffic_weights : [
+          {
+            latest_revision = true
+            percentage      = 100
+          }
+        ]
         content {
           label           = lookup(traffic_weight.value, "label", null)
           revision_suffix = lookup(traffic_weight.value, "revision_suffix", null)
