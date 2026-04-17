@@ -6,8 +6,8 @@ resource "azurerm_container_app_environment" "this" {
   log_analytics_workspace_id         = var.log_analytics_workspace_id
   infrastructure_subnet_id           = var.infrastructure_subnet_id
   infrastructure_resource_group_name = var.infrastructure_resource_group_name
-  internal_load_balancer_enabled     = var.internal_load_balancer_enabled
-  zone_redundancy_enabled            = var.zone_redundancy_enabled
+  internal_load_balancer_enabled     = var.infrastructure_subnet_id != null ? var.internal_load_balancer_enabled : null
+  zone_redundancy_enabled            = var.infrastructure_subnet_id != null ? var.zone_redundancy_enabled : null
 
   dynamic "workload_profile" {
     for_each = var.workload_profiles
