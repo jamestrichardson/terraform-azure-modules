@@ -46,6 +46,7 @@ module "ai_foundry" {
   tenant_id                  = data.azurerm_client_config.current.tenant_id
   storage_account_name       = "aif${var.name_prefix}${random_string.suffix.result}"
   key_vault_name             = "kv-aif-${var.name_prefix}-${random_string.suffix.result}"
+  enable_diagnostic_settings = true
   log_analytics_workspace_id = module.log_analytics.id
 
   tags = var.tags
