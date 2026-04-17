@@ -39,6 +39,12 @@ module "container_registry" {
 - Premium SKU is required for geo-replication and retention policy features.
 - Use `network_rule_set` and `identity_type` when higher-level wrappers need private or managed-identity-aware registry patterns.
 
+## Inputs
+
+| Name                       | Description                                                     | Type   | Default |
+|----------------------------|-----------------------------------------------------------------|--------|---------|
+| enable_diagnostic_settings | Whether to create diagnostic settings for this registry.        | `bool` | `false` |
+
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- terraform-docs will populate inputs/outputs here -->
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

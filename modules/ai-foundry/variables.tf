@@ -37,6 +37,12 @@ variable "log_analytics_workspace_id" {
   default = null
 }
 
+variable "enable_diagnostic_settings" {
+  description = "Whether to create diagnostic settings for this AI Foundry hub."
+  type        = bool
+  default     = false
+}
+
 variable "tags" {
   type    = map(string)
   default = {}

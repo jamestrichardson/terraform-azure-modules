@@ -44,6 +44,12 @@ module "ai_foundry" {
 - `storage_account_name` and `key_vault_name` must be globally unique.
 - Enable `key_vault_purge_protection` for production workloads.
 
+## Inputs
+
+| Name                       | Description                                                     | Type   | Default |
+|----------------------------|-----------------------------------------------------------------|--------|---------|
+| enable_diagnostic_settings | Whether to create diagnostic settings for this AI Foundry hub.  | `bool` | `false` |
+
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- terraform-docs will populate inputs/outputs here -->
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
